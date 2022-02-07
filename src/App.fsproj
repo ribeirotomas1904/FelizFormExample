@@ -4,12 +4,15 @@
     </PropertyGroup>
     <ItemGroup>
         <None Include="index.html" />
-        <Compile Include="Extensions.fs" />
-        <Compile Include="Components.fs" />
+        <Compile Include="Lib/Validations.fs" />
+        <Compile Include="Lib/Hooks/UseField.fs" />
+        <Compile Include="Lib/UI/Form.fs" />
+        <Compile Include="App.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Feliz" Version="1.57.0" />
+        <PackageReference Include="Feliz.MaterialUI" Version="1.2.6" />
         <PackageReference Include="Feliz.Router" Version="3.8.0" />
         <PackageReference Include="Fable.DateFunctions" Version="3.8.1" />
     </ItemGroup>

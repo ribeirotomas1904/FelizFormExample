@@ -11,6 +11,7 @@
         "test": "dotnet fable tests --outDir dist/tests && mocha dist/tests -r esm"
     },
     "dependencies": {
+        "@material-ui/core": "^4.12.3",
         "bulma": "^0.9.1",
         "date-fns": "^2.16.1",
         "react": "^17.0.1",
