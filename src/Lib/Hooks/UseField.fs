@@ -4,7 +4,7 @@ open Browser.Types
 open Feliz
 open Lib.Validations
 
-type Field<'a> =
+type Field<'a, 'b> =
     {
         ref: IRefValue<HTMLInputElement option>
         value: 'a
@@ -13,6 +13,7 @@ type Field<'a> =
         blur: unit -> unit
         errors: string list
         validate: unit -> unit
+        parsed: option<'b>
         clearErrors: unit -> unit
         isValid: unit -> bool
         reset: unit -> unit
@@ -21,7 +22,7 @@ type Field<'a> =
 type Hooks =
 
     [<Hook>]
-    static member useField(initialValue: 'a, ?validations: validation<'a> list) : Field<'a> =
+    static member useField(initialValue: 'a, parse: parseFunc<'a, 'b>, ?validations: validationFunc<'a> list) : Field<'a, 'b> =
         let validations = Option.defaultValue [] validations
 
         let value, setValue = React.useState initialValue
@@ -44,8 +45,8 @@ type Hooks =
             |> List.fold
                 (fun errors validation ->
                     match validation input with
-                    | true, _ -> errors
-                    | false, errorMessage -> errorMessage :: errors)
+                    | Valid -> errors
+                    | NonValid errorMessage -> errorMessage :: errors)
                 []
             |> List.rev
 
@@ -53,11 +54,14 @@ type Hooks =
 
         let validate () = getErrors value |> setErrors
 
+        let parsed = value |> parse
+
         let reset () = setValue initialValue
 
         {
             ref = ref
             value = value
+            parsed = parsed
             setValue = setValue
             errors = errors
             validate = validate
