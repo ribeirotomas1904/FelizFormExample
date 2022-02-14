@@ -8,8 +8,8 @@ type FormProperty =
     interface
     end
 
-type FormProps<'a> =
-    abstract fields: Field<'a> list option
+type FormProps<'a, 'b> =
+    abstract fields: Field<'a, 'b> list option
     abstract onSubmit: (Browser.Types.Event -> unit) option
     abstract children: list<ReactElement> option
 
@@ -17,10 +17,10 @@ type FormProps<'a> =
 [<AutoOpen>]
 module private Core =
     let mkAttr (key: string) (value: 'a) : FormProperty = unbox (key, value)
-    let unboxProperties (properties: FormProperty list) : FormProps<'a> = !!properties |> createObj |> unbox
+    let unboxProperties (properties: FormProperty list) : FormProps<'a, 'b> = !!properties |> createObj |> unbox
 
 type form =
-    static member fields(xs: Field<'a> list) : FormProperty = mkAttr "fields" xs
+    static member fields(xs: Field<'a, 'b> list) : FormProperty = mkAttr "fields" xs
     static member onSubmit(fn: Browser.Types.Event -> unit) : FormProperty = mkAttr "onSubmit" fn
     static member children(xs: ReactElement list) : FormProperty = mkAttr "children" xs
 
@@ -29,7 +29,7 @@ type UI =
     [<ReactComponent>]
     static member form(properties: FormProperty list) : ReactElement =
 
-        let form (props: FormProps<'a>) =
+        let form (props: FormProps<'a, 'b>) =
             let fields = Option.defaultValue [] props.fields
             let onSubmit = Option.defaultValue ignore props.onSubmit
             let children = Option.defaultValue [] props.children

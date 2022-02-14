@@ -1,11 +1,15 @@
 module Lib.Validations
 
-type validation<'a> = 'a -> bool * string
+type Validation<'a> =
+    | NonValid of 'a
+    | Valid
+
+type validationFunc<'a> = 'a -> Validation<'a>
+
+type parseFunc<'a, 'b> = 'a -> option<'b>
 
 let requiredString input =
-    let isValid = input <> ""
-    (isValid, "This field is required")
+    if input <> "" then Valid else NonValid "É obrigatório o preenchimento deste campo"
 
 let minLength length (input: string) =
-    let isValid = input.Length >= length
-    (isValid, sprintf "This field should contain at least %d characters" length)
+    if input.Length >= length then Valid else NonValid (sprintf "This field should contain at least %d characters" length)

@@ -14,7 +14,7 @@ open Lib.Validations
 [<ReactComponent>]
 let TextField
     (props: {| label: string
-               field: Field<string> |})
+               field: Field<string, string> |})
     =
     Mui.textField [
         prop.style [ style.minHeight 80 ]
@@ -36,8 +36,8 @@ let TextField
 
 [<ReactComponent>]
 let App () =
-    let nameField = Hooks.useField ("", [ requiredString; minLength 10 ])
-    let nicknameField = Hooks.useField ("", [ requiredString; minLength 3 ])
+    let nameField = Hooks.useField ("", Some, [ requiredString; minLength 10 ])
+    let nicknameField = Hooks.useField ("", Some, [ requiredString; minLength 3 ])
 
     Html.div [
 
